@@ -4,6 +4,23 @@ height=720
 
 background_color_rgb=[39, 119, 20]
 
+[ui]
+table_x = 280
+dealer_y = 120
+player_y = 400
+
+card_start_x = 400
+card_spacing = 95
+card_width = 80
+card_height = 120
+
+dealer_box = [280, 50, 720, 250]
+player_box = [280, 340, 720, 250]
+
+[buttons]
+hit = [450, 610, 120, 50]
+stand = [630, 610, 120, 50]
+
 [misc]
 fps = 60
 

@@ -16,7 +16,8 @@ class Game:
         self.deck = Deck()
         self._init_players()
 
-        self.ui = blackjack_ui(self)
+        self.config = config
+        self.ui = blackjack_ui(self, config)
 
         # Delays the time for both dealer and end screen
         self.ui_state = "PLAYER_TURN"

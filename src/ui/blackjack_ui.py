@@ -1,21 +1,28 @@
+import logging.config
+from src.config import Config
 import time
 import pygame
 
 from .button import Button
 
 class blackjack_ui:
-    def __init__(self, game):
+    def __init__(self, game, config):
         self.game = game
+        self.config = config
         self.screen = game.screen
 
         self.FONT = pygame.font.SysFont("arial", 24)
         self.BIG  = pygame.font.SysFont("arial", 40)
         self.HUGE = pygame.font.SysFont("arial", 64)
 
-        self.hit_btn = Button("Hit", 450, 610, 120, 50, self.FONT)
-        self.stand_btn = Button("Stand", 630, 610, 120, 50, self.FONT)
+        x, y, w, h = config.hit_btn
+        self.hit_btn = Button("Hit", x, y, w, h, self.FONT)
+
+        x, y, w, h = config.stand_btn
+        self.stand_btn = Button("Stand", x, y, w, h, self.FONT)
 
         self.cache = {}
+
 
     def load_card(self, path):
         if path not in self.cache:
@@ -26,16 +33,16 @@ class blackjack_ui:
 
     def draw_hand(self, cards, y, label):
         if label == "Dealer":
-            self.draw_text(label, 550, y - 50, big=True)
+            self.draw_text(label, self.config.card_start_x + 150, y - 50, big=True)
 
         elif label == "Player":
-            self.draw_text(label, 550, y + 120, big=True)
+            self.draw_text(label, self.config.card_start_x + 150, y + 120, big=True)
 
-        x = 400
+        x = self.config.card_start_x
         for c in cards:
             img = self.load_card(c.rank_img_path)
-            self.screen.blit(img, (x,y))
-            x += 95
+            self.screen.blit(img, (x, y))
+            x += self.config.card_spacing
 
     def draw_text(self, text, x, y, big=False, huge=False):
         f = self.HUGE if huge else self.BIG if big else self.FONT
@@ -44,11 +51,11 @@ class blackjack_ui:
         
     def draw_game(self):
         self.screen.fill(self.game.bg)
-        pygame.draw.rect(self.screen, (0,90,0), (280,50,720,250), border_radius=20)
-        pygame.draw.rect(self.screen, (0,90,0), (280,340,720,250), border_radius=20)
+        pygame.draw.rect(self.screen, (0,90,0), self.config.dealer_box, border_radius=20)
+        pygame.draw.rect(self.screen, (0,90,0), self.config.player_box, border_radius=20)
 
-        self.draw_hand(self.game.dealer.hand.cards, 120, "Dealer")
-        self.draw_hand(self.game.player.hand.cards, 400, "Player")
+        self.draw_hand(self.game.dealer.hand.cards, self.config.dealer_y, "Dealer")
+        self.draw_hand(self.game.player.hand.cards, self.config.player_y, "Player")
 
         self.draw_text(f"Dealer: {self.game.dealer.hand.highest_value}", 550, 250)
         self.draw_text(f"Player: {self.game.player.hand.highest_value}", 550, 355)
